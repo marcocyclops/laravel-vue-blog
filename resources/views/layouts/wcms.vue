@@ -1,10 +1,11 @@
-<script>
-	const abc = 'testing--'
+<script setup>
+	// import Header from '../components/header.vue'
+	import Header from '@/views/components/header.vue'
+
+	import '@/css/global.css'
 </script>
 
 <template>
-	<div class="bg-gray-400">
-		<h1>hello {{ abc }}</h1>
-	</div>
+	<Header/>
 	<slot />
 </template>
