@@ -1,7 +1,9 @@
 <script setup>
-	import { useForm } from '@inertiajs/inertia-vue3'
+	import { ref } from 'vue'
 
+	import { useForm } from '@inertiajs/inertia-vue3'
 	import tinymce from '@/views/components/tinymce.vue'
+	import tags from '@/views/components/tags.vue';
 
 	defineProps({
 		errors: Object
@@ -11,7 +13,7 @@
 		'title': null,
 		'banner': null,
 		'content': null,
-		'tags': null,
+		'tags': [],
 		'published': null,
 	})
 
@@ -47,7 +49,7 @@
 
 		<div>
 			<label for="tags">Tags: </label>
-			<input type="text" id="tags" v-model="form.tags" />
+			<tags id="tags" v-model="form.tags" />
 			<div v-if="errors.tags">{{ errors.tags }}</div>
 		</div>
 
