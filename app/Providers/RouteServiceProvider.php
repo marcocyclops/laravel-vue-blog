@@ -33,14 +33,17 @@ class RouteServiceProvider extends ServiceProvider
             //     ->prefix('api')
             //     ->group(base_path('routes/api.php'));
 
+            // Router for public url
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
 
+            // Router for wcms authentication
             Route::middleware('web')
                 ->prefix('wcms')
                 ->name('wcms.')
                 ->group(base_path('routes/auth.php'));
 
+            // Router for wcms
             Route::middleware(['web', 'auth'])
                 ->prefix('wcms')
                 ->name('wcms.')

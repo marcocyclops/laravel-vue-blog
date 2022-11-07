@@ -4,25 +4,31 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Str;
-use Illuminate\Auth\Events\Lockout;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest2;
 
 class AuthenticationController extends Controller
 {
-    
+    /**
+     * Show login form
+     *
+     * @return void
+     */
     public function login() {
         if (Auth::check()) {
-            return redirect(route('wcms.posts'));
+            return redirect(route('wcms.posts.index'));
         }
 
         return inertia('wcms.Login');
     }
 
+    /**
+     * Authenticate use login
+     *
+     * @param Request $request
+     * @return void
+     */
     public function authenticate(Request $request) {
 
         // throttling
@@ -48,7 +54,7 @@ class AuthenticationController extends Controller
             
             $request->session()->regenerate();
 
-            return redirect()->intended(route('wcms.posts'));
+            return redirect()->intended();
         }
 
         // authenticate failed
@@ -56,6 +62,12 @@ class AuthenticationController extends Controller
         return back()->withErrors(['auth'=>'Incorrect email or password. ' . RateLimiter::remaining($throttleKey, 5)]);
     }
 
+    /**
+     * Logout wcms
+     *
+     * @param Request $request
+     * @return void
+     */
     public function logout(Request $request) {
 
         auth::logout();
