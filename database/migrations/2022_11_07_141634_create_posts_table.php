@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('title')->required()->unique();
+            $table->string('slug')->required()->unique();
             $table->text('content')->nullable();
             $table->boolean('published')->nullable()->default(false);
             $table->date('published_at')->nullable();

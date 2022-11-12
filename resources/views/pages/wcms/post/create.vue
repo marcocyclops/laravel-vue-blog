@@ -11,7 +11,6 @@
 
 	const form = useForm({
 		'title': null,
-		'banner': null,
 		'content': null,
 		'tags': [],
 		'published': null,
@@ -26,8 +25,7 @@
 <template layout="wcms">
 	<div>Create Post:</div>
 
-	<div v-if="errors.auth">{{ errors.auth }}</div>
-	<div v-if="errors.throttling">{{ errors.throttling }}</div>
+	<div v-if="errors.error">{{ errors.error }}</div>
 
 	<form @submit.prevent="submit">
 		<div>
@@ -37,14 +35,9 @@
 		</div>
 
 		<div>
-			<label for="banner">Banner: </label>
-			<input type="text" id="banner" v-model="form.banner" />
-			<div v-if="errors.banner">{{ errors.banner }}</div>
-		</div>
-
-		<div>
 			<label for="content">Content: </label>
 			<tinymce id="content" v-model="form.content" />
+			<div v-if="errors.content">{{ errors.content }}</div>
 		</div>
 
 		<div>
@@ -56,6 +49,7 @@
 		<div>
 			<input type="checkbox" id="published" v-model="form.published" />
 			<label for="published">Published</label>
+			<div v-if="errors.published">{{ errors.published }}</div>
 		</div>
 
 		<div>
