@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Carbon;
 
 use Spatie\Tags\HasTags;
 
@@ -26,4 +28,16 @@ class Post extends Model
         'published' => 'boolean',
         'published_at' => 'date'
     ];
+
+    protected function publishedAt(): Attribute {
+        return Attribute::make(
+            get: fn ($value) => $value ? Carbon::parse($value)->format('Y-m-d') : $value
+        );
+    }
+
+    protected function createdAt(): Attribute {
+        return Attribute::make(
+            get: fn ($value) => $value ? Carbon::parse($value)->format('Y-m-d') : $value
+        );
+    }
 }

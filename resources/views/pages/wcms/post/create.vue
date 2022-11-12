@@ -6,7 +6,8 @@
 	import tags from '@/views/components/tags.vue';
 
 	defineProps({
-		errors: Object
+		errors: Object,
+		suggestTags: Array
 	})
 
 	const form = useForm({
@@ -16,7 +17,7 @@
 		'published': null,
 	})
 
-	async function submit() {
+	function submit() {
 		form.post('/wcms/posts')
 	}
 
@@ -42,7 +43,10 @@
 
 		<div>
 			<label for="tags">Tags: </label>
-			<tags id="tags" v-model="form.tags" />
+			<tags id="tags" 
+				:suggestTags="suggestTags"
+				v-model="form.tags" 
+			/>
 			<div v-if="errors.tags">{{ errors.tags }}</div>
 		</div>
 
