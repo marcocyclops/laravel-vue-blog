@@ -25,9 +25,15 @@ class Post extends Model
     ];
 
     protected $casts = [
-        'published' => 'boolean',
         'published_at' => 'date'
     ];
+
+    protected function published(): Attribute {
+        return Attribute::make(
+            get: fn ($value) => $value ? true : false,
+            set: fn ($value) => $value ? true : false
+        );
+    }
 
     protected function publishedAt(): Attribute {
         return Attribute::make(

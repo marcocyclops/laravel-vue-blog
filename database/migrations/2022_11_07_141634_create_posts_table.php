@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('title')->required()->unique();
             $table->string('slug')->required()->unique();
             $table->text('content')->nullable();
-            $table->boolean('published')->nullable()->default(false);
+            $table->boolean('published')->nullable()->default(0);
             $table->date('published_at')->nullable();
             $table->timestamps();
         });

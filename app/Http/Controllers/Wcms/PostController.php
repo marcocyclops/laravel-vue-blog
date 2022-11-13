@@ -19,13 +19,70 @@ class PostController extends Controller
      * @return void
      */
     public function index() {
-        $posts = Post::select('id', 'title', 'published', 'published_at', 'created_at')
-                ->orderBy('created_at', 'desc')
-                ->get();
-                
-        return inertia('wcms.post.index', [
-            'posts' => $posts
+        return inertia('wcms.post.index');
+    }
+
+    public function list(Request $request) {
+        
+        // validate requested query string
+        $req = $request->validate([
+            'page' => ['nullable', 'integer'],
+            'limit' => ['nullable', 'integer'],
+            'order' => ['nullable', 'string'],
+            'sort' => ['nullable', 'string'],
+            'filter_title' => ['nullable', 'string'],
+            'filter_published' => ['nullable', 'string'],
         ]);
+
+        // get request query string
+        $page = $req['page'] ?? 1;
+
+        $limit = $req['limit'] ?? 10;
+
+        $order = $req['limit'] ?? 'created_at';
+
+        $sort = $req['sort'] ?? 'desc';
+
+        if (!isset($req['filter_title'])) {
+            $filterTitle = '';
+        }
+        elseif (is_null($req['filter_title']) || strtolower(trim($req['filter_title'])) == 'null') {
+            $filterTitle = '';
+        }
+        else {
+            $filterTitle = strtolower(trim($req['filter_title']));
+        }
+
+        if (!isset($req['filter_published'])) {
+            $filterPublished = null;
+        }
+        elseif (is_null($req['filter_published']) || strtolower(trim($req['filter_published'])) == 'null') {
+            $filterPublished = null;
+        }
+        elseif (strtolower(trim($req['filter_published'])) == 'false' || strtolower(trim($req['filter_published'])) == '0') {
+            $filterPublished = 0;
+        }
+        else{
+            $filterPublished = 1;
+        }
+        
+        // eloquent query
+        $posts = Post::where('title', 'like', '%'.$filterTitle.'%')
+                ->where(function ($query) use ($filterPublished) {
+                    if (!is_null($filterPublished)) {
+                        $query->where('published', $filterPublished);
+                    }
+                })
+                ->orderBy($order, $sort)
+                ->paginate(
+                    $limit,  // per page
+                    ['id', 'title', 'published', 'published_at', 'created_at'],  // columns
+                    'page',  // page name
+                    $page // page number
+                );
+                
+        // return paginated posts in json format
+        return response()->json($posts);
     }
 
     /**

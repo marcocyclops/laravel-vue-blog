@@ -16,6 +16,7 @@ use App\Http\Controllers\Wcms\PostController;
 */
     
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+Route::get('/posts/list', [PostController::class, 'list'])->name('posts.list');
 
 Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
 Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
