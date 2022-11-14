@@ -14,10 +14,6 @@
 		'filter_title': null,
 		'filter_published': null,
 	})
-
-	function create() {
-		Inertia.get('/wcms/posts/create')
-	}
 	
 	const getList = async (page = 1) => {
 		const response = await fetch(`/wcms/posts/list?page=${page}&filter_title=${form.filter_title}&filter_published=${form.filter_published}`);
@@ -25,6 +21,14 @@
 	}
 	
 	getList()
+
+	function create() {
+		Inertia.get('/wcms/posts/create')
+	}
+
+	function edit(slug) {
+		Inertia.get(`/wcms/posts/${slug}/edit`)
+	}
 	
 </script>
 
@@ -85,7 +89,7 @@
 				<td>{{ post.created_at }}</td>
 				<td>
 					<button>Publish</button>
-					<button>Edit</button>
+					<button @click="edit(post.slug)">Edit</button>
 					<button>Delete</button>
 				</td>
 			</tr>

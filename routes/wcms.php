@@ -20,3 +20,6 @@ Route::get('/posts/list', [PostController::class, 'list'])->name('posts.list');
 
 Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
 Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+
+Route::get('/posts/{post:slug}/edit', [PostController::class, 'edit'])->name('posts.edit');
+Route::put('/posts/{post:id}', [PostController::class, 'update'])->name('posts.update');

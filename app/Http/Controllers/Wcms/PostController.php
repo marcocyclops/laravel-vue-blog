@@ -14,7 +14,7 @@ use App\Models\Post;
 class PostController extends Controller
 {
     /**
-     * Wcms posts list
+     * show posts list
      *
      * @return void
      */
@@ -22,6 +22,12 @@ class PostController extends Controller
         return inertia('wcms.post.index');
     }
 
+    /**
+     * get paginated posts and return as json format
+     *
+     * @param Request $request
+     * @return void
+     */
     public function list(Request $request) {
         
         // validate requested query string
@@ -76,7 +82,7 @@ class PostController extends Controller
                 ->orderBy($order, $sort)
                 ->paginate(
                     $limit,  // per page
-                    ['id', 'title', 'published', 'published_at', 'created_at'],  // columns
+                    ['id', 'title', 'slug', 'published', 'published_at', 'created_at'],  // columns
                     'page',  // page name
                     $page // page number
                 );
@@ -91,11 +97,8 @@ class PostController extends Controller
      * @return void
      */
     public function create() {
-        $tags = DB::table('tags')->select('name')->orderBy('name', 'asc')->get()->toArray();
-        $tags = array_map(fn ($value) => ['text' => Str::title(json_decode($value->name)->en)], $tags); // wrap for frontend vuejs-tags usage
-
         return inertia('wcms.post.create', [
-            'suggestTags' => $tags
+            'suggestTags' => $this->getTagOptions()
         ]);
     }
 
@@ -127,10 +130,79 @@ class PostController extends Controller
             Post::create($inputs);
         }
         catch(QueryException $e) {
-            Log::error($e->getMessage());
+            Log::error('Error when creating a post and saving to database: ' . $e->getMessage());
             return back()->withErrors(['error'=>'Error when creating a post and saving to database.']);
         }
 
         return redirect(route('wcms.posts.index'));
+    }
+
+    /**
+     * show edit ui
+     *
+     * @param Post $post
+     * @return void
+     */
+    public function edit(Post $post) {
+        if ($post) {
+            $post->tags;  // load post tags before pass to ui
+            return inertia('wcms.post.edit', [
+                'post' => $post,
+                'suggestTags' => $this->getTagOptions()
+            ]);
+        }
+
+        abort(404);
+    }
+
+    public function update(Request $request, Post $post) {
+
+        if (!$post) {
+            return back()->withErrors(['error'=>'Post ' . $post->slug . ' does not exist.']);
+        }
+        
+        // validate inputs
+        $inputs = $request->validate([
+            'title' => ['required', 'string'],
+            'content' => ['nullable', 'string'],
+            'tags' => ['required', 'array'],
+            'published' => ['nullable', 'boolean']
+        ]);
+
+        $post->title = $inputs['title'];
+
+        $post->slug = Str::slug($inputs['title'], '-');
+
+        $post->content = $inputs['content'];
+
+        $tags = array_map(fn ($tag) => Str::title($tag['text']), $inputs['tags']);
+        $post->syncTags($tags);
+
+        $post->published = $inputs['published'];
+
+        if ($inputs['published'] && !$post->published_at) {
+            $post->published_at = today();
+        }
+
+        try {
+            $post->save();
+        }
+        catch(QueryException $e) {
+            Log::error('Error when creating a post and saving to database: ' . $e->getMessage());
+            return back()->withErrors(['error'=>'Error when creating a post and saving to database.']);
+        }
+
+        return redirect(route('wcms.posts.index'));
+    }
+
+    /**
+     * get existing tags optons for ui autocomplete usage
+     *
+     * @return void
+     */
+    public function getTagOptions() {
+        $tags = DB::table('tags')->select('name')->orderBy('name', 'asc')->get()->toArray();
+        $tags = array_map(fn ($value) => ['text' => Str::title(json_decode($value->name)->en)], $tags); // wrap for frontend vuejs-tags usage
+        return $tags;
     }
 }
