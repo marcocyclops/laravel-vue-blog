@@ -1,8 +1,9 @@
 <script setup>
-	import { ref, onMounted } from 'vue'
+	import { ref, reactive } from 'vue'
 	import { Inertia } from '@inertiajs/inertia'
 	import { useForm } from '@inertiajs/inertia-vue3'
 	import { TailwindPagination } from 'laravel-vue-pagination'
+	import axios from 'axios'
 
 	defineProps({
 		errors: Object
@@ -16,8 +17,10 @@
 	})
 	
 	const getList = async (page = 1) => {
-		const response = await fetch(`/wcms/posts/list?page=${page}&filter_title=${form.filter_title}&filter_published=${form.filter_published}`)
-		posts.value = await response.json();
+		const response = await axios.get(`/wcms/posts/list?page=${page}&filter_title=${form.filter_title}&filter_published=${form.filter_published}`)
+		posts.value = response.data
+
+		posts.value.data = posts.value.data.map(post => post = {...post, selected:false})
 	}
 	
 	getList()
@@ -30,12 +33,32 @@
 		Inertia.get(`/wcms/posts/${slug}/edit`)
 	}
 
-	// const deletePost = async (id) => {
-	// 	const response = await fetch(`/wcms/posts/${id}`, {method: 'DELETE'})
-	// 	if (await response) {
-	// 		getList(page=posts.value.current_page)
-	// 	}
-	// }
+	const deletePost = async (id) => {
+		const response = await axios.delete(`/wcms/posts/${id}`)
+		if (response.data.deleted) {
+			getList(posts.value.current_page)
+		}
+	}
+
+	async function deleteSelected() {
+		let ids = []
+		posts.value.data.forEach(((post) => {
+			if (post.selected) {
+				ids.push(post.id)
+			}
+		}))
+		
+		const response = await axios.delete(`/wcms/posts`, {
+			params: {
+				ids: ids
+			}
+		})
+		
+		if (response.data.deleted) {
+			getList(posts.value.current_page)
+		}
+
+	}
 	
 </script>
 
@@ -69,7 +92,7 @@
 	</div>
 	<div>
 		<button>Publish Selected</button>
-		<button>Delete Selected</button>
+		<button @click="deleteSelected">Delete Selected</button>
 	</div>
 	
 	<TailwindPagination 
@@ -90,7 +113,7 @@
 		</thead>
 		<tbody v-if="posts">
 			<tr v-for="post in posts.data" :key="post.id">
-				<td><input type="checkbox"></td>
+				<td><input type="checkbox" v-model="post.selected" /></td>
 				<td>{{ post.id }}</td>
 				<td>{{ post.title }}</td>
 				<td>{{ post.published ? "Published" : "Draft" }}</td>

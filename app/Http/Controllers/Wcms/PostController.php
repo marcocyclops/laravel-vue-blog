@@ -208,13 +208,37 @@ class PostController extends Controller
         return redirect(route('wcms.posts.index'));
     }
 
+    /**
+     * delete post
+     *
+     * @param Post $post
+     * @return void
+     */
     public function destroy(Post $post) {
         if ($post) {
             $post->delete();
-            return response()->json(['delete' => 1]);
+            return response()->json(['deleted' => 1]);
         }
 
-        return back()->withErrors(['error'=>'Can not delete, post not exist.']);
+        return back()->withErrors(['error'=>'Can not delete, post does not exist.']);
+    }
+
+    public function destroySelected(Request $request) {
+
+        // validate inputs
+        $inputs = $request->validate([
+            'ids' => ['required', 'array'],
+        ]);
+        
+        foreach($inputs['ids'] as $id) {
+            $post = Post::find($id);
+            if (!$post) {
+                return back()->withErrors(['error'=>'Can not delete, post not exist.']);
+            }
+            $post->delete();
+        }
+        return response()->json(['deleted' => 1]);
+
     }
 
     /**
