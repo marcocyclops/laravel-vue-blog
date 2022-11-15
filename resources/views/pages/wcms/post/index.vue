@@ -16,26 +16,35 @@
 	})
 	
 	const getList = async (page = 1) => {
-		const response = await fetch(`/wcms/posts/list?page=${page}&filter_title=${form.filter_title}&filter_published=${form.filter_published}`);
+		const response = await fetch(`/wcms/posts/list?page=${page}&filter_title=${form.filter_title}&filter_published=${form.filter_published}`)
 		posts.value = await response.json();
 	}
 	
 	getList()
 
-	function create() {
+	function createPost() {
 		Inertia.get('/wcms/posts/create')
 	}
 
-	function edit(slug) {
+	function editPost(slug) {
 		Inertia.get(`/wcms/posts/${slug}/edit`)
 	}
+
+	// const deletePost = async (id) => {
+	// 	const response = await fetch(`/wcms/posts/${id}`, {method: 'DELETE'})
+	// 	if (await response) {
+	// 		getList(page=posts.value.current_page)
+	// 	}
+	// }
 	
 </script>
 
 <template layout="wcms">
 	<div>Posts List:</div>
+
+	<div v-if="errors.error">{{ errors.error }}</div>
 	<div>
-		<button @click="create">Create</button>
+		<button @click="createPost">Create</button>
 	</div>
 	<div>
 		<form @submit.prevent="getList(posts.current_page)">
@@ -89,8 +98,8 @@
 				<td>{{ post.created_at }}</td>
 				<td>
 					<button>Publish</button>
-					<button @click="edit(post.slug)">Edit</button>
-					<button>Delete</button>
+					<button @click="editPost(post.slug)">Edit</button>
+					<button @click="deletePost(post.id)">Delete</button>
 				</td>
 			</tr>
 		</tbody>

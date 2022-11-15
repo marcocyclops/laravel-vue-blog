@@ -73,19 +73,25 @@ class PostController extends Controller
         }
         
         // eloquent query
-        $posts = Post::where('title', 'like', '%'.$filterTitle.'%')
+        $q = Post::where('title', 'like', '%'.$filterTitle.'%')
                 ->where(function ($query) use ($filterPublished) {
                     if (!is_null($filterPublished)) {
                         $query->where('published', $filterPublished);
                     }
-                })
-                ->orderBy($order, $sort)
-                ->paginate(
-                    $limit,  // per page
-                    ['id', 'title', 'slug', 'published', 'published_at', 'created_at'],  // columns
-                    'page',  // page name
-                    $page // page number
-                );
+                });
+
+        // fix searched pagination less than current_page
+        $maxPages = ceil($q->count() / $limit);
+        $page = $maxPages < $page ? $maxPages : $page;
+
+        // get posts pagination
+        $posts = $q->orderBy($order, $sort)
+                    ->paginate(
+                        $limit,  // per page
+                        ['id', 'title', 'slug', 'published', 'published_at', 'created_at'],  // columns
+                        'page',  // page name
+                        $page // page number
+                    );
                 
         // return paginated posts in json format
         return response()->json($posts);
@@ -155,6 +161,13 @@ class PostController extends Controller
         abort(404);
     }
 
+    /**
+     * update post to database
+     *
+     * @param Request $request
+     * @param Post $post
+     * @return void
+     */
     public function update(Request $request, Post $post) {
 
         if (!$post) {
@@ -193,6 +206,15 @@ class PostController extends Controller
         }
 
         return redirect(route('wcms.posts.index'));
+    }
+
+    public function destroy(Post $post) {
+        if ($post) {
+            $post->delete();
+            return response()->json(['delete' => 1]);
+        }
+
+        return back()->withErrors(['error'=>'Can not delete, post not exist.']);
     }
 
     /**
