@@ -223,6 +223,12 @@ class PostController extends Controller
         return back()->withErrors(['error'=>'Can not delete, post does not exist.']);
     }
 
+    /**
+     * delete selected posts
+     *
+     * @param Request $request
+     * @return void
+     */
     public function destroySelected(Request $request) {
 
         // validate inputs
@@ -233,12 +239,53 @@ class PostController extends Controller
         foreach($inputs['ids'] as $id) {
             $post = Post::find($id);
             if (!$post) {
-                return back()->withErrors(['error'=>'Can not delete, post not exist.']);
+                return back()->withErrors(['error'=>'Can not delete, post does not exist.']);
             }
             $post->delete();
         }
         return response()->json(['deleted' => 1]);
+    }
 
+    /**
+     * toggle post published status
+     *
+     * @param Post $post
+     * @return void
+     */
+    public function toggle(Post $post) {
+        if ($post) {
+            $post->published = !$post->published;
+            if ($post->published && !$post->published_at) {
+                $post->published_at = today();
+            }
+            $post->save();
+            return response()->json(['toggled' => 1]);
+        }
+
+        return back()->withErrors(['error'=>'Can not toggle status, post does not exist.']);
+    }
+
+
+    public function toggleSelected(Request $request) {
+
+        // validate inputs
+        $inputs = $request->validate([
+            'ids' => ['required', 'array'],
+        ]);
+        
+        foreach($inputs['ids'] as $id) {
+            $post = Post::find($id);
+            if (!$post) {
+                return back()->withErrors(['error'=>'Can not toggle status, post does not exist.']);
+            }
+
+            $post->published = !$post->published;
+            if ($post->published && !$post->published_at) {
+                $post->published_at = today();
+            }
+            $post->save();
+        }
+        return response()->json(['toggled' => 1]);
     }
 
     /**

@@ -59,6 +59,33 @@
 		}
 
 	}
+
+	async function toggle(id) {
+		const response = await axios.get(`/wcms/posts/toggle/${id}`)
+		if (response.data.toggled) {
+			getList(posts.value.current_page)
+		}
+	}
+
+	async function toggleSelected() {
+		let ids = []
+		posts.value.data.forEach(((post) => {
+			if (post.selected) {
+				ids.push(post.id)
+			}
+		}))
+		
+		const response = await axios.get(`/wcms/posts/toggle`, {
+			params: {
+				ids: ids
+			}
+		})
+		
+		if (response.data.toggled) {
+			getList(posts.value.current_page)
+		}
+
+	}
 	
 </script>
 
@@ -91,7 +118,7 @@
 		</form>
 	</div>
 	<div>
-		<button>Publish Selected</button>
+		<button @click="toggleSelected">Toggle Selected Status</button>
 		<button @click="deleteSelected">Delete Selected</button>
 	</div>
 	
@@ -120,7 +147,7 @@
 				<td>{{ post.published_at ? post.published_at : "-"}}</td>
 				<td>{{ post.created_at }}</td>
 				<td>
-					<button>Publish</button>
+					<button @click="toggle(post.id)">Toggle Status</button>
 					<button @click="editPost(post.slug)">Edit</button>
 					<button @click="deletePost(post.id)">Delete</button>
 				</td>

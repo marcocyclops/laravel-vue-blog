@@ -26,3 +26,6 @@ Route::put('/posts/{post:id}', [PostController::class, 'update'])->name('posts.u
 
 Route::delete('/posts/{post:id}', [PostController::class, 'destroy'])->name('posts.destroy');
 Route::delete('/posts', [PostController::class, 'destroySelected'])->name('posts.destroy.selected');
+
+Route::get('/posts/toggle/{post:id}', [PostController::class, 'toggle'])->name('posts.toggle');
+Route::get('/posts/toggle', [PostController::class, 'toggleSelected'])->name('posts.toggle.selected');
