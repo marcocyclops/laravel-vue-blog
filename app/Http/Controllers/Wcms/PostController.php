@@ -265,7 +265,12 @@ class PostController extends Controller
         return back()->withErrors(['error'=>'Can not toggle status, post does not exist.']);
     }
 
-
+    /**
+     * toggle selected post published status
+     *
+     * @param Request $request
+     * @return void
+     */
     public function toggleSelected(Request $request) {
 
         // validate inputs

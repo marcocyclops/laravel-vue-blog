@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Open\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/', function() { return redirect()->route('index');});
 
-Route::get('/', function () {
-    return inertia('welcome');
-})->name('home');
+Route::get('/posts', [PostController::class, 'index'])->name('index');
+Route::get('/posts/list', [PostController::class, 'list'])->name('list');           
