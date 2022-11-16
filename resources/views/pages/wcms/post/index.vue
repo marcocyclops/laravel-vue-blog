@@ -86,6 +86,10 @@
 		}
 
 	}
+
+	function select(post) {
+		post.selected = !post.selected
+	}
 	
 </script>
 
@@ -118,7 +122,7 @@
 		</form>
 	</div>
 	<div>
-		<button @click="toggleSelected">Toggle Selected Status</button>
+		<button @click="toggleSelected">Toggle Selected</button>
 		<button @click="deleteSelected">Delete Selected</button>
 	</div>
 	
@@ -142,12 +146,12 @@
 			<tr v-for="post in posts.data" :key="post.id">
 				<td><input type="checkbox" v-model="post.selected" /></td>
 				<td>{{ post.id }}</td>
-				<td>{{ post.title }}</td>
+				<td @click="select(post)">{{ post.title }}</td>
 				<td>{{ post.published ? "Published" : "Draft" }}</td>
 				<td>{{ post.published_at ? post.published_at : "-"}}</td>
 				<td>{{ post.created_at }}</td>
 				<td>
-					<button @click="toggle(post.id)">Toggle Status</button>
+					<button @click="toggle(post.id)">Toggle</button>
 					<button @click="editPost(post.slug)">Edit</button>
 					<button @click="deletePost(post.id)">Delete</button>
 				</td>
