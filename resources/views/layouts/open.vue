@@ -1,11 +1,14 @@
 <script setup>
-	// import Header from '../components/header.vue'
 	import HeaderOpen from '@/views/components/header-open.vue'
+	import Footer from '@/views/components/footer.vue'
 
 	import '@/css/global.css'
 </script>
 
 <template>
-	<HeaderOpen />
-	<slot />
+	<div class="flex flex-col">
+		<HeaderOpen class="sticky top-0" />
+		<slot />
+		<Footer />
+	</div>
 </template>

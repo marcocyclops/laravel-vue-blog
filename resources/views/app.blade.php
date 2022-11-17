@@ -3,10 +3,10 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Laravel with Inertia</title>
+		<title>{{ env('APP_NAME', 'My Blog') }}</title>
 		@vite
 	</head>
-	<body class="antialiased bg-gray-50">
+	<body class="container mx-auto px-4 antialiased">
 		@inertia
 	</body>
 </html>

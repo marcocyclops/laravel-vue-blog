@@ -1,6 +1,7 @@
 <script setup>
 	// import Header from '../components/header.vue'
 	import Header from '@/views/components/header.vue'
+	import Footer from '@/views/components/footer.vue'
 	import WcmsSideMenu from '@/views/components/wcms-side-menu.vue'
 
 	import '@/css/global.css'
@@ -8,12 +9,11 @@
 
 <template>
 	<div class="flex flex-col">
-		<div>
-			<Header/>
-		</div>
+		<Header class="sticky top-0" />
 		<div class="flex flex-row">
-			<div><WcmsSideMenu /></div>
-			<div><slot /></div>
+			<WcmsSideMenu />
+			<slot />
 		</div>
+		<Footer />
 	</div>
 </template>
