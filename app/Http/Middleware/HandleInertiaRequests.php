@@ -41,6 +41,10 @@ class HandleInertiaRequests extends Middleware
             	'php' => PHP_VERSION,
             	'laravel' => \Illuminate\Foundation\Application::VERSION
             ],
+
+            'appName' => config('app.name'),
+
+            'auth.user' => fn() => $request->user() ? $request->user()->only('id', 'name', 'email') : null,
         ]);
     }
 }
