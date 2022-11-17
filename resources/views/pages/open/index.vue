@@ -3,6 +3,7 @@
     import { ref, onMounted, onUnmounted } from 'vue'
     import TagsOpen from '@/views/components/tags-open.vue'
 	import axios from 'axios'
+	import { Inertia } from '@inertiajs/inertia'
 
     defineProps({
 		errors: Object
@@ -39,20 +40,22 @@
         }
     }
 
+    function toPost(slug) {
+        Inertia.get(`/posts/show/${slug}`)
+    }
+
 </script>
 
 <template layout="open">
     <h1>Home</h1>
     <div ref="scrollPosts">
         <div v-for="post in posts" :key="post.slug">
-            <div>{{ post.id }} - {{ post.title }}</div>
+            <div @click="toPost(post.slug)">{{ post.id }} - {{ post.title }}</div>
             <div class="flex flex-row">
                 <TagsOpen :tags="post.tags" />
                 {{ post.published_at }}
             </div>
-            <div>
-                {{ post.content }}
-            </div>
+            <div v-html="post.content" @click="toPost(post.slug)"></div>
             <hr />
         </div>
     </div>

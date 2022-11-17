@@ -10,10 +10,21 @@ use App\Models\Post;
 
 class PostController extends Controller
 {
+    /**
+     * open posts list page without data
+     *
+     * @return void
+     */
     public function index() {
          return inertia('open.index');
     }
 
+    /**
+     * get posts list data
+     *
+     * @param Request $request
+     * @return void
+     */
     public function list(Request $request) {
         
         // validate inputs
@@ -34,5 +45,16 @@ class PostController extends Controller
         });
         
         return response()->json($posts);
+    }
+
+    public function show(Post $post) {
+        if ($post) {
+            $post->tags;  // load post tags before pass to ui
+            return inertia('open.show', [
+                'post' => $post
+            ]);
+        }
+
+        abort(404);
     }
 }

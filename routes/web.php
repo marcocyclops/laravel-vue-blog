@@ -14,7 +14,9 @@ use App\Http\Controllers\Open\PostController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', function() { return redirect()->route('index');});
+Route::get('/', function() { return redirect()->route('open.index');});
 
-Route::get('/posts', [PostController::class, 'index'])->name('index');
-Route::get('/posts/list', [PostController::class, 'list'])->name('list');           
+Route::get('/posts', [PostController::class, 'index'])->name('open.index');
+Route::get('/posts/list', [PostController::class, 'list'])->name('open.list');
+
+Route::get('/posts/show/{post:slug}', [PostController::class, 'show'])->name('open.show');
