@@ -47,6 +47,12 @@ class PostController extends Controller
         return response()->json($posts);
     }
 
+    /**
+     * show a detail post
+     *
+     * @param Post $post
+     * @return void
+     */
     public function show(Post $post) {
         if ($post) {
             $post->tags;  // load post tags before pass to ui
@@ -56,5 +62,47 @@ class PostController extends Controller
         }
 
         abort(404);
+    }
+
+    /**
+     * show posts by tag name
+     *
+     * @param [type] $tag
+     * @return void
+     */
+    public function tag($tag) {
+
+        return inertia('open.tag-posts', ['tagName' => $tag]);
+    }
+
+    /**
+     * get posts by tag name
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function tagPosts(Request $request) {
+
+        // validate inputs
+        $inputs = $request->validate([
+            'tag' => ['required', 'string'],
+            'cursor' => ['nullable', 'string'],
+        ]);
+
+        $tagName = $inputs['tag'];
+        $nextCursor = $inputs['cursor'] ?? null;
+        
+        $q = Post::withAnyTags([$tagName])
+                    ->where('published', true)
+                    ->orderBy('published_at', 'desc');
+
+        $posts = $q->cursorPaginate(10, ['id', 'title', 'slug', 'content', 'published_at'], 'cursor', $nextCursor);
+
+        $posts->map(function($post) {
+            $post->tags;  // load tags
+            $post->content = Str::limit($post->content, 200);  // trim content as desription
+        });
+        
+        return response()->json($posts);
     }
 }

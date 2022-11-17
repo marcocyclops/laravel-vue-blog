@@ -1,19 +1,22 @@
 <script setup>
 
-    import { ref, onMounted, onUnmounted } from 'vue'
+    import { ref, onMounted, onUnmounted, toRefs } from 'vue'
     import TagsOpen from '@/views/components/tags-open.vue'
 	import axios from 'axios'
 	import { Inertia } from '@inertiajs/inertia'
 
-    defineProps({
-		errors: Object
+    const props = defineProps({
+		errors: Object,
+        tagName: String,
 	})
+
+    const { tagName } = toRefs(props)
 
 	const posts = ref([])  // hold all posts
     const list = ref({})  // hold posts for one request, will push into posts above
 
 	const getList = async (cursor=null) => {
-		const response = await axios.get(`/posts/list?cursor=${cursor}`)
+		const response = await axios.get(`/posts/tag-posts?cursor=${cursor}&tag=${tagName.value}`)
 		list.value = response.data
         posts.value.push(...list.value.data)
 	}
