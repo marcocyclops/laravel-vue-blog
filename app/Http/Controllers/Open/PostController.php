@@ -30,15 +30,21 @@ class PostController extends Controller
         // validate inputs
         $inputs = $request->validate([
             'cursor' => ['nullable', 'string'],
+            'search' => ['nullable', 'string'],
         ]);
 
         $nextCursor = $inputs['cursor'] ?? null;
+        $search = $inputs['search'] ?? '';
         
         $q = Post::where('published', true)
+                    ->where(function ($query) use ($search) {
+                        $query->where('title', 'like', '%'.$search.'%')
+                                ->orWhere('content', 'like', '%'.$search.'%');
+                    })
                     ->orderBy('published_at', 'desc');
 
         $posts = $q->cursorPaginate(10, ['id', 'title', 'slug', 'content', 'published_at'], 'cursor', $nextCursor);
-
+        
         $posts->map(function($post) {
             $post->tags;  // load tags
             $post->content = Str::limit($post->content, 200);  // trim content as desription
@@ -87,13 +93,19 @@ class PostController extends Controller
         $inputs = $request->validate([
             'tag' => ['required', 'string'],
             'cursor' => ['nullable', 'string'],
+            'search' => ['nullable', 'string']
         ]);
 
         $tagName = $inputs['tag'];
         $nextCursor = $inputs['cursor'] ?? null;
+        $search = $inputs['search'] ?? '';
         
         $q = Post::withAnyTags([$tagName])
                     ->where('published', true)
+                    ->where(function ($query) use ($search) {
+                        $query->where('title', 'like', '%'.$search.'%')
+                                ->orWhere('content', 'like', '%'.$search.'%');
+                    })
                     ->orderBy('published_at', 'desc');
 
         $posts = $q->cursorPaginate(10, ['id', 'title', 'slug', 'content', 'published_at'], 'cursor', $nextCursor);

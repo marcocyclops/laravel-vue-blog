@@ -17,5 +17,4 @@
 		<div @click="toDashboard">Dashboard</div>
 		<div @click="toCreate" class="whitespace-nowrap">Create Post</div>
 	</div>
-	<slot />
 </template>

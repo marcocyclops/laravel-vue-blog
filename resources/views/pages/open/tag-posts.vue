@@ -1,6 +1,6 @@
 <script setup>
 
-    import { ref, onMounted, onUnmounted, toRefs } from 'vue'
+    import { ref, toRefs, onMounted, onUnmounted, watch } from 'vue'
     import TagsOpen from '@/views/components/tags-open.vue'
 	import axios from 'axios'
 	import { Inertia } from '@inertiajs/inertia'
@@ -12,11 +12,13 @@
 
     const { tagName } = toRefs(props)
 
+    const search = ref('')
+
 	const posts = ref([])  // hold all posts
     const list = ref({})  // hold posts for one request, will push into posts above
 
 	const getList = async (cursor=null) => {
-		const response = await axios.get(`/posts/tag-posts?cursor=${cursor}&tag=${tagName.value}`)
+		const response = await axios.get(`/posts/tag-posts?cursor=${cursor}&tag=${tagName.value}&search=${search.value}`)
 		list.value = response.data
         posts.value.push(...list.value.data)
 	}
@@ -47,10 +49,22 @@
         Inertia.get(`/posts/show/${slug}`)
     }
 
+    watch(search, () => {
+        posts.value = []
+        getList()
+    })
+
 </script>
 
 <template layout="open">
-    <h1>Home</h1>
+    <div>
+        <h1>Tag posts</h1>
+
+        <div class="flex flex-row w-1/2 text-end">
+            <input type="text" placeholder="search" v-model="search"/>
+        </div>
+        <hr />
+    </div>
     <div ref="scrollPosts">
         <div v-for="post in posts" :key="post.slug">
             <div @click="toPost(post.slug)">{{ post.id }} - {{ post.title }}</div>

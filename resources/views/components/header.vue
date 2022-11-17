@@ -13,5 +13,4 @@
 		<h1 class="w-1/2">Marco Cyclops</h1>
 		<h1 class="w-1/2 text-end"><span @click="logout">Logout</span></h1>
 	</div>
-	<slot />
 </template>
