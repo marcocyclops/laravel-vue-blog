@@ -1,10 +1,19 @@
 <script setup>
 
+    import { ref, watch } from 'vue'
+	import { Inertia } from '@inertiajs/inertia'
     import TagsOpen from '@/views/components/tags-open.vue'
 
     const props = defineProps({
 		post: Object
 	})
+
+    const tagClicked = ref('')
+
+    watch(tagClicked, () => {
+        Inertia.get(`/posts`, {'tag': tagClicked.value,})
+    })
+
 </script>
 
 <template layout="open">

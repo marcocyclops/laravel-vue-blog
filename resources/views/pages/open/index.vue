@@ -5,9 +5,10 @@
 	import axios from 'axios'
 	import { Inertia } from '@inertiajs/inertia'
 
-    defineProps({
+    const props = defineProps({
 		errors: Object,
         suggestTags: Array,
+        tag:String,
 	})
 
     const search = ref('')
@@ -15,8 +16,7 @@
 	const posts = ref([])  // hold all posts
     const list = ref({})  // hold posts for one request, will push into posts above
     const cursorSent = ref('')  // for checking and avoid duplicate getList called
-    const tagClicked = ref('')
-
+    const tagClicked = ref(props.tag)
 
 	const getList = async (cursor=null) => {
         cursorSent.value = list.value.next_cursor  // make sure cursorSent is diffrent from next_cursor

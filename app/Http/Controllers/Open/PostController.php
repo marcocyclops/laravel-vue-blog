@@ -15,9 +15,18 @@ class PostController extends Controller
      *
      * @return void
      */
-    public function index() {
+    public function index(Request $request) {
+
+        // validate inputs
+        $inputs = $request->validate([
+            'tag' => ['nullable', 'string'],
+        ]);
+
+        $tag = $inputs['tag'] ?? '';
+
          return inertia('open.index', [
-            'suggestTags' => $this->getTagOptions()
+            'suggestTags' => $this->getTagOptions(),
+            'tag' => $tag
         ]);
     }
 
