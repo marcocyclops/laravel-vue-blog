@@ -122,7 +122,7 @@ class PostController extends Controller
             'published' => ['nullable', 'boolean']
         ]);
 
-        $tags = array_map(fn ($tag) => Str::title($tag['text']), $inputs['tags']);
+        $tags = array_map(fn ($tag) => $tag['text'], $inputs['tags']);
         $inputs['tags'] = $tags;
 
         $inputs['slug'] = Str::slug($inputs['title'], '-');
@@ -187,7 +187,7 @@ class PostController extends Controller
 
         $post->content = $inputs['content'];
 
-        $tags = array_map(fn ($tag) => Str::title($tag['text']), $inputs['tags']);
+        $tags = array_map(fn ($tag) => $tag['text'], $inputs['tags']);
         $post->syncTags($tags);
 
         $post->published = $inputs['published'];

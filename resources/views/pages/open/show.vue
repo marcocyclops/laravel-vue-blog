@@ -8,10 +8,24 @@
 </script>
 
 <template layout="open">
-    <h1>{{post.title}}</h1>
-    <div class="flex flex-row">
-        <TagsOpen :tags="post.tags" />
-        {{ post.published_at }}
+
+    <div class="flex flex-col px-4 py-8 mt-4 mb-6 rounded-lg shadow-inner border border-gray-100 text-lg md:text-base">
+        <div class="text-3xl md:text-2xl font-bold mb-2">
+            {{ post.title }}
+        </div>
+
+        <div class="mb-2 text-base md:text-sm">
+            {{ post.published_at }}
+        </div>
+
+        <div>
+            <TagsOpen :tags="post.tags" v-model="tagClicked" />
+        </div>
+
+        <div 
+            v-html="post.content" 
+            class="mt-6"
+        >
+        </div>
     </div>
-    <div v-html="post.content"></div>
 </template>

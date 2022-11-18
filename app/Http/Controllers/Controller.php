@@ -21,7 +21,7 @@ class Controller extends BaseController
      */
     public function getTagOptions() {
         $tags = DB::table('tags')->select('name')->orderBy('name', 'asc')->get()->toArray();
-        $tags = array_map(fn ($value) => ['text' => Str::title(json_decode($value->name)->en)], $tags); // wrap for frontend vuejs-tags usage
+        $tags = array_map(fn ($value) => ['text' => json_decode($value->name)->en], $tags); // wrap for frontend vuejs-tags usage
         return $tags;
     }
 }

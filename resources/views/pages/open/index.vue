@@ -65,17 +65,18 @@
 </script>
 
 <template layout="open">
+
     <div class="flex flex-col text-lg md:text-base">
         <div class="flex flex-col-reverse md:flex-row bg-white py-3 sticky top-11">
             <div class="w-full md:w-1/2 my-1 md:mr-2">
                 <select v-model="tagClicked" class="px-2 pb-1 pt-2 border-gray-100 shadow-md border w-full md:w-1/2">
                     <option value="">標籤分類</option>
-                    <option v-for="tag in suggestTags" :key="tag.text" :value="tag.text" :selected="tagClicked==tag.text">{{ tag.text }}</option>
+                    <option v-for="tag in suggestTags" :key="tag.text" :value="tag.text" :selected="tagClicked.toLowerCase()==tag.text.toLowerCase()">{{ tag.text }}</option>
                 </select>
             </div>
             <div class="w-full md:w-1/2 my-1 md:ml-2">
                 <input 
-                    type="text" 
+                    type="search" 
                     placeholder="搜尋" 
                     v-model="search" 
                     class="px-2 py-1 border-gray-100 shadow-md border w-full" 
