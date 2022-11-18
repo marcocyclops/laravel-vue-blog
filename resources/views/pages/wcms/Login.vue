@@ -1,7 +1,6 @@
 <script setup>
 
 	import { useForm } from '@inertiajs/inertia-vue3'
-	import '@/css/global.css'
 
 	defineProps({
 		errors: Object

@@ -4,7 +4,6 @@
 	import Footer from '@/views/components/footer.vue'
 	import WcmsSideMenu from '@/views/components/wcms-side-menu.vue'
 
-	import '@/css/global.css'
 </script>
 
 <template>

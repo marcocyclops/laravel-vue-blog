@@ -19,7 +19,7 @@
 			<span @click="toHome" class="cursor-pointer text-lg whitespace-nowrap">{{ appName }}</span>
 		</div>
 		<div class="w-1/2 text-end">
-			<a :href="`mailto:${email}`">Contact Me</a>
+			<a :href="`mailto:${email}`">聯絡我</a>
 		</div>
 	</div>
 </template>

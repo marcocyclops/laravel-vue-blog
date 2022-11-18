@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\Controller;
 use App\Models\Post;
@@ -291,16 +290,5 @@ class PostController extends Controller
             $post->save();
         }
         return response()->json(['toggled' => 1]);
-    }
-
-    /**
-     * get existing tags optons for ui autocomplete usage
-     *
-     * @return void
-     */
-    public function getTagOptions() {
-        $tags = DB::table('tags')->select('name')->orderBy('name', 'asc')->get()->toArray();
-        $tags = array_map(fn ($value) => ['text' => Str::title(json_decode($value->name)->en)], $tags); // wrap for frontend vuejs-tags usage
-        return $tags;
     }
 }

@@ -20,6 +20,3 @@ Route::get('/posts', [PostController::class, 'index'])->name('open.index');
 Route::get('/posts/list', [PostController::class, 'list'])->name('open.list');
 
 Route::get('/posts/show/{post:slug}', [PostController::class, 'show'])->name('open.show');
-
-Route::get('/posts/tag/{tag}', [PostController::class, 'tag'])->name('open.tag');
-Route::get('/posts/tag-posts', [PostController::class, 'tagPosts'])->name('open.tagposts');

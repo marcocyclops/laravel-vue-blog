@@ -2,7 +2,6 @@
 	import HeaderOpen from '@/views/components/header-open.vue'
 	import Footer from '@/views/components/footer.vue'
 
-	import '@/css/global.css'
 </script>
 
 <template>
