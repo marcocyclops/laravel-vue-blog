@@ -11,7 +11,7 @@
     const tagClicked = ref('')
 
     watch(tagClicked, () => {
-        Inertia.get(`/posts`, {'tag': tagClicked.value,})
+        Inertia.post(`/posts`, {'tag': tagClicked.value,})
     })
 
 </script>

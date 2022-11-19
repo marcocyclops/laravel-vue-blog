@@ -15,7 +15,20 @@ class PostController extends Controller
      *
      * @return void
      */
-    public function index(Request $request) {
+    public function index() {
+
+         return inertia('open.index', [
+            'suggestTags' => $this->getTagOptions(),
+        ]);
+    }
+
+    /**
+     * open posts list page with tag clicked from post detail page
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function tagposts(Request $request) {
 
         // validate inputs
         $inputs = $request->validate([

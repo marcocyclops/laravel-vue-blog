@@ -12,11 +12,11 @@
 	})
 
     const search = ref('')
+    const tagClicked = ref(props.tag ?? '')
 
 	const posts = ref([])  // hold all posts
     const list = ref({})  // hold posts for one request, will push into posts above
     const cursorSent = ref('')  // for checking and avoid duplicate getList called
-    const tagClicked = ref(props.tag)
 
 	const getList = async (cursor=null) => {
         cursorSent.value = list.value.next_cursor  // make sure cursorSent is diffrent from next_cursor
@@ -67,7 +67,7 @@
 <template layout="open">
 
     <div class="flex flex-col text-lg md:text-base">
-        <div class="flex flex-col-reverse md:flex-row bg-white py-3 sticky top-11">
+        <div class="flex flex-col md:flex-row bg-white py-3 sticky top-11">
             <div class="w-full md:w-1/2 my-1 md:mr-2">
                 <select v-model="tagClicked" class="px-2 pb-1 pt-2 border-gray-100 shadow-md border w-full md:w-1/2">
                     <option value="">標籤分類</option>

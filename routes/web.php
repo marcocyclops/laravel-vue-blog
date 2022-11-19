@@ -17,6 +17,7 @@ use App\Http\Controllers\Open\PostController;
 Route::get('/', function() { return redirect()->route('open.index');})->name('home');
 
 Route::get('/posts', [PostController::class, 'index'])->name('open.index');
+Route::post('/posts', [PostController::class, 'tagposts'])->name('open.tagposts');
 Route::get('/posts/list', [PostController::class, 'list'])->name('open.list');
 
 Route::get('/posts/show/{post:slug}', [PostController::class, 'show'])->name('open.show');
